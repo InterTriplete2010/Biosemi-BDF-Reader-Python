@@ -401,7 +401,7 @@ def extract_data_biosemi(BDF_file_selected,reference_channel):
                  #temp_bytes = [];
                  #temp_bytes = bdf_file.read(int(sampl_freq_data)*3);
                  temp_bytes = np.array([]);
-                 temp_bytes = np.fromfile(bdf_file, dtype = np.uint8,count = int(sampl_freq_data)*3);
+                 temp_bytes = np.fromfile(bdf_file, dtype = np.uint8, count = int(sampl_freq_data)*3);
                  
                  #start_data = 0;
                  #step_data = 3;
