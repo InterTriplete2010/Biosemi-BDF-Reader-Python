@@ -454,6 +454,3 @@ def extract_data_biosemi(BDF_file_selected,reference_channel):
     bdf_file.close();  #close the binary file
     
     return EEG
-
-#aa = extract_data_biosemi("Newtest17-256.bdf",-1)
-#aa = extract_data_biosemi("S01_Quiet.bdf",[0,1])
