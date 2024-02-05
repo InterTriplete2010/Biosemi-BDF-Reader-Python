@@ -426,6 +426,8 @@ def extract_data_biosemi(BDF_file_selected,reference_channel):
     EEG.trigger_type = EEG.trigger_type[0,slice(-(size_array[1] - track_trigger))];
     EEG.trigger_latency = EEG.trigger_latency[0,slice(-(size_array[1] - track_trigger))]
     EEG.trigger_status = EEG.trigger_status[0,slice(-(size_array[1] - track_trigger))]
+    #---------------------------------------------------------------------------#
+    #---------------------------------------------------------------------------#
     
     # Rerefencing the data
     if (reference_channel == -1):
