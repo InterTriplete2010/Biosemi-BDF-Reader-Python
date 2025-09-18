@@ -6,6 +6,7 @@ Created on Thu Jan 25 15:11:05 2024
 """
 import numpy as np
 import numpy.matlib
+import scipy.io as sio
 
 # This function extracts the eeg data from the Biosemi binary file
 # and convert them into mat format. There are 20 fields, as decsribed in https://www.biosemi.com/faq/file_format.htm
@@ -64,7 +65,7 @@ class EEG_Class:
     
     pass
 
-def extract_data_biosemi(BDF_file_selected,reference_channel):
+def extract_data_biosemi(BDF_file_selected,reference_channel,name_file):
     EEG = EEG_Class();
     
     bdf_file = open(BDF_file_selected, mode = "rb")
@@ -371,7 +372,7 @@ def extract_data_biosemi(BDF_file_selected,reference_channel):
                         
                      if((trigger_type_lat_first8bits[mm] != 0 or trigger_type_lat_second8bits[mm] != 0) and (trigger_type_lat_first8bits[mm] - trigger_type_lat_first8bits[mm-1] > 0) or (trigger_type_lat_second8bits[mm] - trigger_type_lat_second8bits[mm-1] > 0)):
                          EEG.trigger_type[0,track_trigger] = trigger_type_lat_first8bits[mm] + trigger_type_lat_second8bits[mm]*pow(2,8);
-                         EEG.trigger_latency[0,track_trigger] = mm + (ll-1)*int(EEG.srate);
+                         EEG.trigger_latency[0,track_trigger] = mm + (ll-1)*int(EEG.srate) + 1;
                          EEG.trigger_status[0,track_trigger] = bin(trigger_type_lat_third8bits[mm]).replace("0b", ""); #save the data in binary format;
                          
                          track_trigger += 1;
@@ -455,4 +456,37 @@ def extract_data_biosemi(BDF_file_selected,reference_channel):
 
     bdf_file.close();  #close the binary file
     
+    #Now store the key variables in a dictiorary and save them in npy and mat format 
+    time = np.zeros((1,int(EEG.pnts)))
+    for kk in range(time.shape[1]):
+        
+        time[0,kk] = kk/EEG.srate
+        
+    data_structure = {
+  "data_exported" : 
+          {
+           "eeg_data" :             EEG.data,
+           "channels" :             EEG.nbchan,
+           "samples"  :             EEG.pnts,
+           "sampling_frequency" :   EEG.srate,
+           "time"               :   time,
+           "reference_channel"  :   reference_channel,
+           "trial_duration"     :   time[0,time.shape[1]-1],
+           "labels"             :   EEG.labels,
+           "chanlocs"           :   [], #To be filled with the coordinates of the sensors
+           "resolution"         :   EEG.resolution,
+           "events_trigger"     :   EEG.trigger_latency,
+           "events_type"        :   EEG.trigger_type,
+           "events_status"      :   EEG.trigger_status
+           },
+  
+  }
+        
+        #Save in matlab format
+    sio.savemat((name_file + ".mat"), data_structure)
+
+        #Save in npy format
+    np.save((name_file + ".mat"), data_structure)
+    
     return EEG
+
