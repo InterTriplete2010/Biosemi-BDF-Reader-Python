@@ -486,7 +486,8 @@ def extract_data_biosemi(BDF_file_selected,reference_channel,name_file):
     sio.savemat((name_file + ".mat"), data_structure)
 
         #Save in npy format
-    np.save((name_file + ".mat"), data_structure)
+    np.save((name_file), data_structure)
     
     return EEG
+
 
