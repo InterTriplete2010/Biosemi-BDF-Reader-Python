@@ -488,6 +488,7 @@ def extract_data_biosemi(BDF_file_selected,reference_channel,name_file):
         #Save in npy format
     np.save((name_file), data_structure)
     
-    return EEG
+    return EEG,data_structure
+
 
 
